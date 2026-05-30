@@ -1,0 +1,52 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowListApprovedDataLakeBuckets",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::example-databricks-raw-zone",
+        "arn:aws:s3:::example-databricks-curated-zone"
+      ],
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": [
+            "databricks/workspaces/*",
+            "shared/reference-data/*"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "AllowReadWriteApprovedPrefixesOnly",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::example-databricks-raw-zone/databricks/workspaces/*",
+        "arn:aws:s3:::example-databricks-curated-zone/databricks/workspaces/*",
+        "arn:aws:s3:::example-databricks-curated-zone/shared/reference-data/*"
+      ]
+    },
+    {
+      "Sid": "DenyUnencryptedObjectUploads",
+      "Effect": "Deny",
+      "Action": "s3:PutObject",
+      "Resource": [
+        "arn:aws:s3:::example-databricks-raw-zone/*",
+        "arn:aws:s3:::example-databricks-curated-zone/*"
+      ],
+      "Condition": {
+        "StringNotEquals": {
+          "s3:x-amz-server-side-encryption": "aws:kms"
+        }
+      }
+    }
+  ]
+}
