@@ -1,0 +1,41 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowStandardDatabricksOperations",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:Describe*",
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:ListBucket",
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:GenerateDataKey"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "DenyPrivilegeEscalationAndSecurityBypass",
+      "Effect": "Deny",
+      "Action": [
+        "iam:CreateUser",
+        "iam:CreateAccessKey",
+        "iam:AttachUserPolicy",
+        "iam:AttachRolePolicy",
+        "iam:PutRolePolicy",
+        "iam:PassRole",
+        "iam:UpdateAssumeRolePolicy",
+        "organizations:*",
+        "cloudtrail:StopLogging",
+        "cloudtrail:DeleteTrail",
+        "guardduty:DeleteDetector",
+        "config:DeleteConfigurationRecorder"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
