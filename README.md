@@ -1,46 +1,61 @@
-# Cyber Databricks AWS IAM Controls
+<p align="center">
+  <img src="./assets/cyber-databricks-banner.svg" alt="Cyber Databricks AWS IAM Controls banner" width="100%" />
+</p>
 
-> **Project type:** Cloud IAM Security Assessment Lab  
-> **Platform:** Databricks on AWS  
-> **Focus:** IAM trust, least privilege, S3 access boundaries, logging integrity, and policy validation
-
----
-
-## Executive Brief
-
-This repository is built like a security assessment package for a Databricks workspace running on AWS. Instead of only showing sample code, it shows how a cyber/cloud security engineer would review IAM access, identify risky permission patterns, document control expectations, and build repeatable validation around Databricks access to AWS resources.
-
-The project answers one main question:
-
-> How can Databricks use AWS resources without giving the workspace broad or unsafe cloud permissions?
+<p align="center">
+  <a href="#overview">Overview</a> •
+  <a href="#security-review-diagram">Diagram</a> •
+  <a href="#what-this-project-covers">Coverage</a> •
+  <a href="#repo-contents">Repo Contents</a> •
+  <a href="#skills-highlighted">Skills</a>
+</p>
 
 ---
 
-## Assessment Scenario
+## Overview
 
-A Databricks workspace needs access to AWS services for analytics workloads. The workspace may need to read and write to approved S3 data lake paths, publish logs to CloudWatch, and use encryption keys for protected data. Security needs to make sure the integration does not create excessive access, weak cross-account trust, or privilege escalation paths.
+**Cyber Databricks AWS IAM Controls** is a portfolio project built to showcase how a Databricks deployment on AWS can be reviewed from a **cloud IAM security** perspective.
 
-This project reviews the IAM design as if it were going through a cloud security assessment before production use.
+This project focuses on the most important access-control and security-review areas, including:
 
----
+- **Cross-account IAM trust relationships**
+- **Least-privilege S3 access**
+- **CloudWatch logging permissions**
+- **Permission boundaries**
+- **IAM policy validation and security review workflow**
 
-## Security Objectives
-
-| Objective | What the project demonstrates |
-|---|---|
-| Control cross-account trust | Trust policy requires the Databricks AWS principal and an external ID condition |
-| Reduce data access scope | S3 policy is limited to approved buckets and prefixes |
-| Protect audit evidence | CloudWatch policy allows log delivery but denies destructive log actions |
-| Prevent privilege escalation | Permission boundary denies sensitive IAM, Organizations, CloudTrail, GuardDuty, and Config actions |
-| Automate review | Python validator flags risky IAM policy patterns before deployment |
-| Support audit conversations | Documentation maps the project to control themes, threats, and remediation steps |
+Instead of looking like a generic lab, this repository is structured like a **real cloud security engineering review package**.
 
 ---
 
-## Repository Evidence Map
+## Security Review Diagram
+
+<p align="center">
+  <img src="./assets/iam-security-review-diagram.svg" alt="Databricks on AWS IAM security review diagram" width="100%" />
+</p>
+
+---
+
+## What This Project Covers
+
+| Review Area | Purpose | Example Artifact |
+|---|---|---|
+| Cross-account trust | Restrict who can assume the Databricks role | `iam-policies/databricks-cross-account-role-trust-policy.json` |
+| Data access control | Limit S3 access to approved buckets and prefixes | `iam-policies/least-privilege-s3-access-policy.json` |
+| Logging integrity | Allow logging while protecting audit evidence | `iam-policies/cloudwatch-logs-access-policy.json` |
+| Privilege escalation prevention | Block high-risk IAM and admin actions | `iam-policies/restricted-admin-boundary-policy.json` |
+| Policy validation | Detect risky patterns in IAM policies | `scripts/validate_databricks_iam.py` |
+
+---
+
+## Repo Contents
 
 ```text
 Cyber_Databricks_AWS_IAM_Controls
+│
+├── assets/
+│   ├── cyber-databricks-banner.svg
+│   └── iam-security-review-diagram.svg
 │
 ├── iam-policies/
 │   ├── databricks-cross-account-role-trust-policy.json
@@ -57,6 +72,7 @@ Cyber_Databricks_AWS_IAM_Controls
 │   └── validate_databricks_iam.py
 │
 ├── docs/
+│   ├── assessment-checklist.md
 │   ├── control-mapping.md
 │   ├── threat-model.md
 │   └── remediation-guide.md
@@ -67,82 +83,44 @@ Cyber_Databricks_AWS_IAM_Controls
 
 ---
 
-## Assessment Workflow
+## Quick Review Flow
 
-### 1. Review the trust boundary
-
-Start with the Databricks cross-account role trust policy. Confirm that only the expected Databricks AWS principal can assume the role and that an external ID is required.
-
-**Evidence:** `iam-policies/databricks-cross-account-role-trust-policy.json`
-
-### 2. Review data lake permissions
-
-Check whether Databricks access is scoped to approved S3 buckets and prefixes. The goal is to avoid broad access such as `s3:*` on all resources.
-
-**Evidence:** `iam-policies/least-privilege-s3-access-policy.json`
-
-### 3. Review logging permissions
-
-Validate that the role can create and write CloudWatch logs, but cannot delete logs or remove retention settings.
-
-**Evidence:** `iam-policies/cloudwatch-logs-access-policy.json`
-
-### 4. Review privilege escalation controls
-
-Check whether the permission boundary prevents unsafe IAM and security-service changes, such as attaching admin policies, passing privileged roles, stopping CloudTrail, or deleting GuardDuty detectors.
-
-**Evidence:** `iam-policies/restricted-admin-boundary-policy.json`
-
-### 5. Run automated policy review
-
-Use the validator to detect risky patterns in the policy files.
+1. Review the **trust policy** for the Databricks access path.
+2. Review the **S3 access policy** for least privilege.
+3. Review the **CloudWatch logging policy** to preserve audit visibility.
+4. Review the **permission boundary** for escalation control.
+5. Run the **validation script** to scan for risky IAM patterns.
 
 ```bash
 python scripts/validate_databricks_iam.py --policy-dir iam-policies
 ```
 
-The validator flags examples such as wildcard actions, wildcard resources, missing external ID conditions, and high-risk administrative actions.
-
----
-
-## What Makes This Project Different
-
-This project is structured as a **security review package**, not just a coding demo. It shows:
-
-- how IAM policies are reviewed in a cloud security assessment,
-- what evidence a reviewer would look at,
-- what threats matter for Databricks on AWS,
-- how guardrails reduce the blast radius,
-- and how a lightweight CI workflow can support policy-as-code review.
-
----
-
-## Key Files to Review First
-
-| Priority | File | Why it matters |
-|---|---|---|
-| 1 | `docs/threat-model.md` | Explains the main IAM and data access risks |
-| 2 | `iam-policies/databricks-cross-account-role-trust-policy.json` | Shows how cross-account role assumption is controlled |
-| 3 | `iam-policies/least-privilege-s3-access-policy.json` | Shows scoped data lake access |
-| 4 | `iam-policies/restricted-admin-boundary-policy.json` | Shows privilege escalation guardrails |
-| 5 | `scripts/validate_databricks_iam.py` | Shows automated review logic |
-
 ---
 
 ## Skills Highlighted
 
-- AWS IAM policy design
-- Databricks security architecture review
-- Cross-account role trust analysis
-- S3 least-privilege access design
-- Permission boundary guardrails
+- AWS IAM security design
+- Databricks security review
+- Cross-account trust policy analysis
+- Least-privilege S3 access design
+- Permission boundary implementation
 - CloudWatch logging protection
-- Python policy validation
-- Terraform IAM resource modeling
-- Control mapping and threat documentation
+- Python-based policy validation
+- Terraform IAM modeling
+- Security documentation and assessment workflow
+
+---
+
+## Best Files to Open First
+
+- `assets/cyber-databricks-banner.svg`
+- `assets/iam-security-review-diagram.svg`
+- `docs/threat-model.md`
+- `iam-policies/restricted-admin-boundary-policy.json`
+- `scripts/validate_databricks_iam.py`
 
 ---
 
 ## Disclaimer
 
-This is a portfolio security lab using sample account IDs, role names, and bucket names. Replace all placeholders and validate against your organization’s Databricks and AWS requirements before using in a real environment.
+This is a portfolio project using sample AWS account IDs, resource names, and role names for demonstration purposes only.
