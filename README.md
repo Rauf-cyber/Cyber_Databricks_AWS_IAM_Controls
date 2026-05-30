@@ -111,16 +111,18 @@ python scripts/validate_databricks_iam.py --policy-dir iam-policies
 
 ---
 
-## Best Files to Open First
+## Project Value
 
-- `assets/cyber-databricks-banner.svg`
-- `assets/iam-security-review-diagram.svg`
-- `docs/threat-model.md`
-- `iam-policies/restricted-admin-boundary-policy.json`
-- `scripts/validate_databricks_iam.py`
+This project shows how cloud security review can be turned into a repeatable engineering workflow. It combines IAM policy design, infrastructure-as-code, documentation, and automated validation so access decisions are easier to review, explain, and improve.
 
----
+A reviewer can use this repo to understand:
 
-## Disclaimer
+- how Databricks access to AWS can be scoped through IAM,
+- how S3 and logging permissions can be separated by purpose,
+- how permission boundaries reduce escalation risk,
+- how security documentation supports audit and governance conversations,
+- and how policy validation can catch risky access patterns before deployment.
 
-This is a portfolio project using sample AWS account IDs, resource names, and role names for demonstration purposes only.
+## Real-World Use Case
+
+In an enterprise environment, this type of review would help security teams evaluate a Databricks workspace before broader adoption. The same pattern can support cloud service onboarding, access reviews, control mapping, and secure data platform governance.
