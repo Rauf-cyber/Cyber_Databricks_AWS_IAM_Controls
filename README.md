@@ -4,6 +4,7 @@
 
 <p align="center">
   <a href="#overview">Overview</a> •
+  <a href="#my-approach">My Approach</a> •
   <a href="#security-review-diagram">Diagram</a> •
   <a href="#what-this-project-covers">Coverage</a> •
   <a href="#repo-contents">Repo Contents</a> •
@@ -25,6 +26,14 @@ This project focuses on the most important access-control and security-review ar
 - **IAM policy validation and security review workflow**
 
 Instead of looking like a generic lab, this repository is structured like a **real cloud security engineering review package**.
+
+---
+
+## My Approach
+
+I built this project around the way I would look at a real Databricks access review in AWS. I did not want it to just be a few sample IAM policies sitting in a repo. I wanted the project to show the thought process behind the security review: who is allowed to assume the role, what data the role can reach, how logging is protected, and where risky permissions should be restricted.
+
+The idea was to make the project practical and easy to explain. Each part connects back to a real review question a cloud security team would ask before approving access. The IAM policies show the control design, the Terraform shows how the role could be modeled, the documentation explains the risk areas, and the Python validator shows how some of the review can be automated.
 
 ---
 
