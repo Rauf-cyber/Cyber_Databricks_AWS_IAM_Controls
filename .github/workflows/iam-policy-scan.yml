@@ -1,0 +1,30 @@
+name: Databricks AWS IAM Policy Scan
+
+on:
+  push:
+    paths:
+      - "iam-policies/**"
+      - "scripts/validate_databricks_iam.py"
+      - ".github/workflows/iam-policy-scan.yml"
+  pull_request:
+    paths:
+      - "iam-policies/**"
+      - "scripts/validate_databricks_iam.py"
+      - ".github/workflows/iam-policy-scan.yml"
+
+jobs:
+  validate-iam-policies:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate Databricks AWS IAM policies
+        run: python scripts/validate_databricks_iam.py --policy-dir iam-policies
